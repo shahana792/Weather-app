@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: url('https://img.freepik.com/free-vector/sky-background-video-conferencing_23-2148639325.jpg?t=st=1717499474~exp=1717503074~hmac=88aa1266bf1935a1ed43fdd7b751b901c3c8ab1a18e5bfbb8ed6bd312ca4705f&w=1480') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(222, 208, 208, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #mydiv {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<script>
+let getInfo =  async () => {
+    console.log("hello!");
+    let city = document.getElementById('cityname').value;
+    let key = 'd72729578543cfc435344f99b226b1c9';
+    let wurl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&units=metric`
+    let resp = await fetch(wurl);
+    console.log(resp);
+    let data = await resp.json();
+    console.log(data);
+    let maxtemp = data.main.temp_max;
+    let mintemp =  data.main.temp_min;
+    console.log(maxtemp);
+    console.log(mintemp);
+    let weather = data.weather[0].main;
+    let weatherDesc = data.weather[0].description;
+    let windSpeed = data.wind.speed;
+    console.log(data.name);  
+    let wicon = data.weather[0].icon;
+    let wimagesrc = "http://www.openweathermap.org/img/w/"+wicon+".png";
+
+    
+    let weatherBackgrounds = {
+        'Clear': 'https://th.bing.com/th/id/OIP.rt61l3fe8tI5M8WqymTAfgHaEv?rs=1&pid=ImgDetMain',
+        'Clouds': 'https://th.bing.com/th/id/R.21580ade9ad6d30f235b3c6704f4c47e?rik=tMVWnmOlMHI87w&riu=http%3a%2f%2fwww.publicdomainpictures.net%2fpictures%2f80000%2fvelka%2fscattered-clouds-in-the-sky.jpg&ehk=jiq20qsGenACsY%2fbalkEpRCCsRVSSTa1hOL1IopykyA%3d&risl=&pid=ImgRaw&r=0',
+        'Rain': 'https://th.bing.com/th/id/OIP.a6NJ8XKZ4PxKeAPOZ7Ps5wHaE8?rs=1&pid=ImgDetMain',
+        'Snow': 'https://th.bing.com/th/id/OIP.4T-8vQVMsXZiX1I1c50EtAHaE4?rs=1&pid=ImgDetMain',
+        'Thunderstorm': 'https://cdn.britannica.com/62/158162-050-9FDE49B4/thunderstorm-and-lightning.jpg',
+        'Drizzle': 'https://thumbs.dreamstime.com/b/obliquely-drizzling-rain-illuminated-sunlight-over-summer-meadow-field-grasses-obliquely-drizzling-rain-over-summer-153535541.jpg',
+        'Fog': 'https://th.bing.com/th/id/OIP.bnQ7EqlgVtFr_PXN3n3-KAHaE7?rs=1&pid=ImgDetMain', 
+        'Haze':'https://cdn-icons-png.flaticon.com/512/9755/9755264.png',
+        'Mist':'https://th.bing.com/th/id/OIP.9-7BoEXYOXWM_NIF_ELWlQHaFj?rs=1&pid=ImgDetMain'
+        
+    };
+
+  
+    if (weatherBackgrounds[weather]) {
+        document.body.style.backgroundImage = `url('${weatherBackgrounds[weather]}')`;
+    }
+
+    document.getElementById("mydiv").innerHTML =
+    `Weather today in <b> ${city} </b> is
+        <br> Max Temp ${maxtemp} °C
+        <br> Min Temp ${mintemp} °C
+        <br> Weather  ${weather}
+        <br> Weather description ${weatherDesc}
+        <br> Wind speed ${windSpeed} m/s
+        <br> <img src='${wimagesrc}' alt='weather image here'/>
+        `;
+}
+</script>
+<body>
+    <div class="container">
+        <h1>Welcome to my Weather App!</h1>
+        <input type="text" class="form-control" id="cityname" placeholder="Enter city name" />
+        <button onclick="getInfo()" type="button" class="form-control">Get Weather</button>
+        <div id="mydiv">
+            This should change
+        </div>
+    </div>
+</body>
+</html>
